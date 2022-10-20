@@ -69,14 +69,15 @@ class Games(commands.Cog):
     """The Cog containing all the games commands."""
 
     JOBS = {
-        "💻 Développeur": (50, 100),
-        "⚽ Footballeur": (300, 500),
-        "🕵 Détective": (70, 130),
-        "🛠 Forgeron": (30, 50),
-        "🧑‍🔬 Chimiste": (60, 120),
-        "🧑‍🍳 Cuisinier": (40, 100),
+        "💻 Développeur Skript": (50, 100),
+        "🖥️ Développeur Web": (300, 500),
+        "🎨 Graphiste": (70, 130),
+        "🛠 Sys-Admin": (30, 50),
+        "⛰️ Builder": (60, 120),
+        "🖊️ Rédacteur": (40, 100),
+        "🌐 CM": (80, 150),
     }
-    JOBS_WEIGHTS = [50, 3, 20, 50, 20, 40]
+    JOBS_WEIGHTS = [50, 3, 20, 50, 20, 40, 10]
 
     ROULETTE_COLORS = {"red": 1.25, "black": 1.25, "green": 3}
     ROULETTE_WEIGHTS = [0.48, 0.48, 0.04]
@@ -105,7 +106,7 @@ class Games(commands.Cog):
     @app_commands.command(name="mine")
     @app_commands.checks.cooldown(1, 60 * 60 * 2, key=lambda i: i.user.id)
     async def mine(self, interaction: discord.Interaction):
-        """Miner de la EndCrypto."""
+        """Miner des Lulux Coins."""
         mined = random.randint(300, 600)
 
         await self.client.mongo.update_user_data_document(interaction.user.id, {"$inc": {"bank": mined}})
@@ -117,7 +118,7 @@ class Games(commands.Cog):
     @app_commands.command(name="work")
     @app_commands.checks.cooldown(1, 60 * 20, key=lambda i: i.user.id)
     async def work(self, interaction: discord.Interaction):
-        """Travailler pour gagner de la EndCrypto."""
+        """Travailler pour gagner des Lulux Coins."""
         job = random.choices(list(self.JOBS), self.JOBS_WEIGHTS)[0]
         earned = random.randint(self.JOBS[job][0], self.JOBS[job][1])
 
@@ -139,7 +140,7 @@ class Games(commands.Cog):
     )
     @app_commands.checks.cooldown(1, 3, key=lambda i: i.user.id)
     async def roulette(self, interaction: discord.Interaction, color: Choice[str], amount: int):
-        """Jouer à la roulette afin de tenter de gagner de la EndCrypto."""
+        """Jouer à la roulette afin de tenter de gagner des Lulux Coins."""
         if not await self._is_bet_amount_valid(interaction, amount):
             return
 
@@ -168,7 +169,7 @@ class Games(commands.Cog):
     @app_commands.describe(amount="Montant que vous misez")
     @app_commands.checks.cooldown(1, 3, key=lambda i: i.user.id)
     async def slots(self, interaction: discord.Interaction, amount: int):
-        """Jouer à la machine à sous afin de tenter de gagner de la EndCrypto."""
+        """Jouer à la machine à sous afin de tenter de gagner des Lulux Coins."""
         if not await self._is_bet_amount_valid(interaction, amount):
             return
 
@@ -189,7 +190,7 @@ class Games(commands.Cog):
 
         await self.client.embed(
             interaction,
-            title="**🎰 Machine à sous**",
+            title="**🎰 Machine à Lulux Coins**",
             description=f"🎰 {''.join(d for d in slots_rows[0])} 🎰\n"
                         f"➡ {''.join(d for d in slots_rows[1])} ⬅\n"
                         f"🎰 {''.join(d for d in slots_rows[2])} 🎰\n\n"
@@ -206,7 +207,7 @@ class Games(commands.Cog):
             return
 
         if target.id == interaction.user.id:
-            return await interaction.response.send_message("Vous ne pouvez pas jouer contre vous-même.", ephemeral=True)
+            return await interaction.response.send_message("Vous ne pouvez pas jouer contre vous-même, abruti.", ephemeral=True)
 
         if target.id == self.client.user.id:
             return await interaction.response.send_message("Vous ne pouvez pas jouer contre le bot.", ephemeral=True)
@@ -214,7 +215,7 @@ class Games(commands.Cog):
         target_data = await self.client.mongo.fetch_user_data(target.id)
         if target_data["bank"] < amount:
             return await interaction.response.send_message(
-                f"{target.mention} n'a pas assez d'argent sur son compte bancaire.", ephemeral=True
+                f"{target.mention} n'a pas assez d'argent sur son compte bancaire, sale pauvre.", ephemeral=True
             )
 
         await interaction.response.send_message(
