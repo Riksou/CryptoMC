@@ -61,7 +61,7 @@ class Profile(commands.Cog):
             description=f"🏦 **Banque**: {user_data['bank']:,} {self.client.config['coin']}\n"
                         f"💈 **Ratio roulette**: "
                         f"{self._get_game_ratio(user_data['roulette_won'], user_data['roulette_lost']):0.2f}\n"
-                        f"🎰 **Ratio machine à sous**: "
+                        f"🎰 **Ratio machine à Lulux Coins**: "
                         f"{self._get_game_ratio(user_data['slots_won'], user_data['slots_lost']):0.2f}\n"
                         f"🪙 **Ratio coinflip**: "
                         f"{self._get_game_ratio(user_data['coinflip_won'], user_data['coinflip_lost']):0.2f}\n",
@@ -75,7 +75,7 @@ class Profile(commands.Cog):
 
     @app_commands.command(name="leaderboard")
     async def leaderboard(self, interaction: discord.Interaction):
-        """Afficher le classement des utilisateurs avec le plus de EndCrypto."""
+        """Afficher le classement des utilisateurs avec le plus de Lulux Coins."""
         pipeline = [{"$match": {"bank": {"$exists": True}}}, {"$project": {"bank": 1}}, {"$sort": {"bank": -1}}]
         cursor = self.client.mongo.db["user"].aggregate(pipeline)
         menu = InteractionViewMenu(
@@ -113,7 +113,7 @@ class Profile(commands.Cog):
     @app_commands.command(name="hourly")
     @app_commands.checks.cooldown(1, 60 * 60, key=lambda i: i.user.id)
     async def hourly(self, interaction: discord.Interaction):
-        """Récupérer de la EndCrypto chaque heure."""
+        """Récupérer des Lulux Coins chaque heure."""
         earned = random.randint(100, 300)
         await self.client.mongo.update_user_data_document(interaction.user.id, {"$inc": {"bank": earned}})
 
@@ -125,7 +125,7 @@ class Profile(commands.Cog):
     @app_commands.command(name="daily")
     @app_commands.checks.cooldown(1, 60 * 60 * 24, key=lambda i: i.user.id)
     async def daily(self, interaction: discord.Interaction):
-        """Récupérer de la EndCrypto chaque jour."""
+        """Récupérer des Lulux Coins chaque jour."""
         earned = random.randint(2000, 3000)
         await self.client.mongo.update_user_data_document(interaction.user.id, {"$inc": {"bank": earned}})
 
