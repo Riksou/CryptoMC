@@ -65,6 +65,33 @@ class CoinFlipConfirmationView(ui.View):
         await interaction.response.edit_message(content=None, view=None, embed=coinflip_embed)
 
 
+class RouletteReplay(ui.View):
+
+    def __init__(self, cog: commands.Cog, color: Choice[str], amount: int):
+        super().__init__(timeout=60.0)
+        self.cog = cog
+        self.color = color
+        self.amount = amount
+
+    @discord.ui.button(label="Rejouer", emoji="🔁", style=discord.ButtonStyle.blurple)
+    async def replay(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
+        roulette_command = interaction.client.tree.get_command("roulette")
+        await roulette_command.callback(self.cog, interaction, self.color, self.amount)
+
+
+class SlotsReplay(ui.View):
+
+    def __init__(self, cog: commands.Cog, amount: int):
+        super().__init__(timeout=60.0)
+        self.cog = cog
+        self.amount = amount
+
+    @discord.ui.button(label="Rejouer", emoji="🔁", style=discord.ButtonStyle.blurple)
+    async def replay(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
+        roulette_command = interaction.client.tree.get_command("slots")
+        await roulette_command.callback(self.cog, interaction, self.amount)
+
+
 class Games(commands.Cog):
     """The Cog containing all the games commands."""
 
@@ -160,7 +187,8 @@ class Games(commands.Cog):
             interaction,
             title="**💈 Roulette**",
             description=f"Résultat: {self.ROULETTE_EMOJIS[winning_color]}\n\n"
-                        f"{msg}"
+                        f"{msg}",
+            view=RouletteReplay(self, color, amount)
         )
 
     @app_commands.command(name="slots")
@@ -193,7 +221,8 @@ class Games(commands.Cog):
             description=f"🎰 {''.join(d for d in slots_rows[0])} 🎰\n"
                         f"➡ {''.join(d for d in slots_rows[1])} ⬅\n"
                         f"🎰 {''.join(d for d in slots_rows[2])} 🎰\n\n"
-                        f"{msg}"
+                        f"{msg}",
+            view=SlotsReplay(self, amount)
         )
 
     @app_commands.command(name="coinflip")

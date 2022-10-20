@@ -40,14 +40,15 @@ class CryptoMC(commands.Bot):
 
     """ Response utils. """
 
-    async def embed(self, interaction: discord.Interaction, title: str, description: str) -> None:
+    async def embed(self, interaction: discord.Interaction, title: str, description: str, **kwargs) -> None:
         await interaction.response.send_message(
             embed=discord.Embed(
                 title=title,
                 description=description,
                 color=self.color,
                 timestamp=discord.utils.utcnow()
-            ).set_footer(text=f"{interaction.user}", icon_url=interaction.user.display_avatar)
+            ).set_footer(text=f"{interaction.user}", icon_url=interaction.user.display_avatar),
+            **kwargs
         )
 
     """ Ready actions. """
