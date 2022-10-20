@@ -32,7 +32,7 @@ class CryptoMC(commands.Bot):
 
         self.config = config
 
-        self.color = 0x51F029
+        self.color = 0xf7ac1c
 
     @property
     def mongo(self) -> Optional[MongoDB]:
