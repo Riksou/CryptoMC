@@ -62,7 +62,9 @@ class Profile(commands.Cog):
                         f"💈 **Ratio roulette**: "
                         f"{self._get_game_ratio(user_data['roulette_won'], user_data['roulette_lost']):0.2f}\n"
                         f"🎰 **Ratio machine à sous**: "
-                        f"{self._get_game_ratio(user_data['slots_won'], user_data['slots_lost']):0.2f}\n",
+                        f"{self._get_game_ratio(user_data['slots_won'], user_data['slots_lost']):0.2f}\n"
+                        f"🪙 **Ratio coinflip**: "
+                        f"{self._get_game_ratio(user_data['coinflip_won'], user_data['coinflip_lost']):0.2f}\n",
             color=self.client.color,
             timestamp=discord.utils.utcnow()
         )
