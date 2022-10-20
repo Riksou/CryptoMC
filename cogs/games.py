@@ -55,7 +55,8 @@ class CoinFlipConfirmationView(ui.View):
 
         coinflip_embed = discord.Embed(
             title=f"**🪙 Pile ou face**",
-            description=f"{winner.mention} est le gagnant du pile ou face, il gagne **{self.amount}** $EMC.",
+            description=f"{winner.mention} est le gagnant du pile ou face, il gagne **{self.amount}** "
+                        f"{interaction.client.config['coin']}.",
             color=interaction.client.color,
             timestamp=discord.utils.utcnow()
         )
@@ -109,7 +110,9 @@ class Games(commands.Cog):
 
         await self.client.mongo.update_user_data_document(interaction.user.id, {"$inc": {"bank": mined}})
 
-        await self.client.embed(interaction, "**⛏ Minage**", f"Vous venez de miner **{mined}** $EMC.")
+        await self.client.embed(
+            interaction, "**⛏ Minage**", f"Vous venez de miner **{mined}** {self.client.config['coin']}."
+        )
 
     @app_commands.command(name="work")
     @app_commands.checks.cooldown(1, 60 * 20, key=lambda i: i.user.id)
@@ -122,7 +125,8 @@ class Games(commands.Cog):
 
         await self.client.embed(
             interaction, "**💵 Travail**",
-            f"Vous venez de travailler en tant que **{job}** et vous avez gagné **{earned}** $EMC."
+            f"Vous venez de travailler en tant que **{job}** et vous avez gagné **{earned}** "
+            f"{self.client.config['coin']}."
         )
 
     @app_commands.command(name="roulette")
@@ -143,10 +147,12 @@ class Games(commands.Cog):
         if winning_color == color.value:
             amount_won = int(amount * self.ROULETTE_COLORS[winning_color])
             update_actions = {"$inc": {"bank": amount_won, "roulette_won": 1}}
-            msg = f"Vous venez de gagner votre partie de roulette, vous remportez **{amount_won}** $EMC."
+            msg = f"Vous venez de gagner votre partie de roulette, vous remportez **{amount_won}** " \
+                  f"{self.client.config['coin']}."
         else:
             update_actions = {"$inc": {"bank": -amount, "roulette_lost": 1}}
-            msg = f"Vous venez de perdre votre partie de roulette, vous perdez **{amount}** $EMC."
+            msg = f"Vous venez de perdre votre partie de roulette, vous perdez **{amount}** " \
+                  f"{self.client.config['coin']}."
 
         await self.client.mongo.update_user_data_document(interaction.user.id, update_actions)
 
@@ -172,10 +178,12 @@ class Games(commands.Cog):
         if all(x == slots_rows[1][0] for x in slots_rows[1]):
             amount_won = int(amount * self.SLOTS_EMOJIS[slots_rows[1][0]])
             update_actions = {"$inc": {"bank": amount_won, "slots_won": 1}}
-            msg = f"Vous venez de gagner votre partie de machine à sous, vous remportez **{amount_won}** $EMC."
+            msg = f"Vous venez de gagner votre partie de machine à sous, vous remportez **{amount_won}** " \
+                  f"{self.client.config['coin']}."
         else:
             update_actions = {"$inc": {"bank": -amount, "slots_won": 1}}
-            msg = f"Vous venez de perdre votre partie de machine à sous, vous perdez **{amount}** $EMC."
+            msg = f"Vous venez de perdre votre partie de machine à sous, vous perdez **{amount}** " \
+                  f"{self.client.config['coin']}."
 
         await self.client.mongo.update_user_data_document(interaction.user.id, update_actions)
 
@@ -211,7 +219,7 @@ class Games(commands.Cog):
 
         await interaction.response.send_message(
             f"{target.mention}, vous venez de recevoir une demande de pile ou face de {interaction.user.mention} pour "
-            f"**{amount}** $EMC.\n"
+            f"**{amount}** {self.client.config['coin']}.\n"
             f"Vous pouvez accepter la demande en réagissant à ce message avec ✅ et la refuser avec ❌.",
             view=CoinFlipConfirmationView(interaction.user, target, amount)
         )

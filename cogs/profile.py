@@ -20,7 +20,8 @@ class LeaderboardMenuSource(menus.ListPageSource):
         leaderboard_message = ""
         for place, member_data in enumerate(entries, start=offset):
             [member_data.setdefault(d, menu.bot.mongo.DEFAULT_USER_DATA[d]) for d in menu.bot.mongo.DEFAULT_USER_DATA]
-            leaderboard_message += f"`{place + 1}.` <@{member_data['_id']}> • 🏦 **{member_data['bank']:,}** $EMC\n"
+            leaderboard_message += f"`{place + 1}.` <@{member_data['_id']}> • 🏦 **" \
+                                   f"{member_data['bank']:,}** {menu.bot.config['coin']}\n"
 
         embed_top = discord.Embed(
             title=f"**Classement des utilisateurs**",
@@ -57,7 +58,7 @@ class Profile(commands.Cog):
         user_data = await self.client.mongo.fetch_user_data(user.id)
         profile_embed = discord.Embed(
             title=f"**{user}**",
-            description=f"🏦 **Banque**: {user_data['bank']:,} $EMC\n"
+            description=f"🏦 **Banque**: {user_data['bank']:,} {self.client.config['coin']}\n"
                         f"💈 **Ratio roulette**: "
                         f"{self._get_game_ratio(user_data['roulette_won'], user_data['roulette_lost']):0.2f}\n"
                         f"🎰 **Ratio machine à sous**: "
@@ -103,7 +104,8 @@ class Profile(commands.Cog):
         await self.client.mongo.update_user_data_document(target.id, {"$inc": {"bank": amount}})
 
         await self.client.embed(
-            interaction, "**💵 Paiement**", f"Vous venez de payer **{amount}** $EMC à {target.mention}."
+            interaction, "**💵 Paiement**",
+            f"Vous venez de payer **{amount}** {self.client.config['coin']} à {target.mention}."
         )
 
     @app_commands.command(name="hourly")
@@ -115,7 +117,7 @@ class Profile(commands.Cog):
 
         await self.client.embed(
             interaction, "**⏱ Récolte horaire**",
-            f"Vous venez de gagner **{earned}** $EMC grâce à votre récolte horaire."
+            f"Vous venez de gagner **{earned}** {self.client.config['coin']} grâce à votre récolte horaire."
         )
 
     @app_commands.command(name="daily")
@@ -127,7 +129,7 @@ class Profile(commands.Cog):
 
         await self.client.embed(
             interaction, "**⏰ Récolte quotidienne**",
-            f"Vous venez de gagner **{earned}** $EMC grâce à votre récolte quotidienne."
+            f"Vous venez de gagner **{earned}** {self.client.config['coin']} grâce à votre récolte quotidienne."
         )
 
 
