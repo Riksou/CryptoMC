@@ -207,7 +207,7 @@ class Games(commands.Cog):
             return
 
         if target.id == interaction.user.id:
-            return await interaction.response.send_message("Vous ne pouvez pas jouer contre vous-même, abruti.", ephemeral=True)
+            return await interaction.response.send_message("Vous ne pouvez pas jouer contre vous-même.", ephemeral=True)
 
         if target.id == self.client.user.id:
             return await interaction.response.send_message("Vous ne pouvez pas jouer contre le bot.", ephemeral=True)
@@ -215,7 +215,7 @@ class Games(commands.Cog):
         target_data = await self.client.mongo.fetch_user_data(target.id)
         if target_data["bank"] < amount:
             return await interaction.response.send_message(
-                f"{target.mention} n'a pas assez d'argent sur son compte bancaire, sale pauvre.", ephemeral=True
+                f"{target.mention} n'a pas assez d'argent sur son compte bancaire.", ephemeral=True
             )
 
         await interaction.response.send_message(
