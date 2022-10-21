@@ -67,27 +67,35 @@ class CoinFlipConfirmationView(ui.View):
 
 class RouletteReplay(ui.View):
 
-    def __init__(self, cog: commands.Cog, color: Choice[str], amount: int):
+    def __init__(self, author_id: int, cog: commands.Cog, color: Choice[str], amount: int):
         super().__init__(timeout=60.0)
+        self.author_id = author_id
         self.cog = cog
         self.color = color
         self.amount = amount
 
     @discord.ui.button(label="Rejouer", emoji="🔁", style=discord.ButtonStyle.blurple)
     async def replay(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
+        if interaction.user.id != self.author_id:
+            return await interaction.response.send_message("Ce boutton ne vous cible pas.")
+
         roulette_command = interaction.client.tree.get_command("roulette")
         await roulette_command.callback(self.cog, interaction, self.color, self.amount)
 
 
 class SlotsReplay(ui.View):
 
-    def __init__(self, cog: commands.Cog, amount: int):
+    def __init__(self, author_id: int, cog: commands.Cog, amount: int):
         super().__init__(timeout=60.0)
+        self.author_id = author_id
         self.cog = cog
         self.amount = amount
 
     @discord.ui.button(label="Rejouer", emoji="🔁", style=discord.ButtonStyle.blurple)
     async def replay(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
+        if interaction.user.id != self.author_id:
+            return await interaction.response.send_message("Ce boutton ne vous cible pas.")
+
         slots_command = interaction.client.tree.get_command("slots")
         await slots_command.callback(self.cog, interaction, self.amount)
 
@@ -189,7 +197,7 @@ class Games(commands.Cog):
             title="**💈 Roulette**",
             description=f"Résultat: {self.ROULETTE_EMOJIS[winning_color]}\n\n"
                         f"{msg}",
-            view=RouletteReplay(self, color, amount)
+            view=RouletteReplay(interaction.user.id, self, color, amount)
         )
 
     @app_commands.command(name="slots")
@@ -223,7 +231,7 @@ class Games(commands.Cog):
                         f"➡ {''.join(d for d in slots_rows[1])} ⬅\n"
                         f"🎰 {''.join(d for d in slots_rows[2])} 🎰\n\n"
                         f"{msg}",
-            view=SlotsReplay(self, amount)
+            view=SlotsReplay(interaction.user.id, self, amount)
         )
 
     @app_commands.command(name="coinflip")
