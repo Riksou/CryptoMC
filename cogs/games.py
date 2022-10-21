@@ -106,12 +106,12 @@ class Games(commands.Cog):
     """The Cog containing all the games commands."""
 
     JOBS = {
-        "💻 Développeur Skript": (50, 100),
+        "💻 Développeur Skript": (50, 80),
         "🖥️ Développeur Web": (300, 500),
-        "🎨 Graphiste": (70, 130),
-        "🛠 Sys-Admin": (30, 50),
-        "⛰️ Builder": (60, 120),
-        "🖊️ Rédacteur": (40, 100),
+        "🎨 Graphiste": (200, 300),
+        "🛠 Sys-Admin": (250, 350),
+        "⛰️ Builder": (100, 250),
+        "🖊️ Rédacteur": (30, 100),
         "🌐 CM": (80, 150),
     }
     JOBS_WEIGHTS = [50, 3, 20, 50, 20, 40, 10]
