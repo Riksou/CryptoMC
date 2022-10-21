@@ -43,6 +43,15 @@ class Bot(commands.Cog):
             )
         )
 
+    @commands.Cog.listener()
+    async def on_command_error(self, ctx: commands.Context, error: commands.CommandError) -> None:
+        error = getattr(error, "original", error)
+
+        if isinstance(error, (commands.CommandNotFound, commands.NotOwner)):
+            return
+
+        raise error
+
     async def on_app_command_error(self, interaction: discord.Interaction, error: app_commands.AppCommandError) -> None:
         error = getattr(error, "original", error)
 
