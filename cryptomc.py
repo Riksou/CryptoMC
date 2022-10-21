@@ -1,11 +1,16 @@
 from __future__ import annotations
 
+import importlib
 import json
 import os
 from typing import Optional, TYPE_CHECKING
 
 import discord
 from discord.ext import commands
+
+import utils.blackjack as blackjack
+import utils.errors as errors
+import utils.menus as menus
 
 if TYPE_CHECKING:
     from cogs.mongodb import MongoDB
@@ -71,10 +76,21 @@ class CryptoMC(commands.Bot):
 
         await self.sync_guild()
 
+    """ Helper functions. """
+
     async def sync_guild(self) -> None:
         guild = discord.Object(id=self.config["guild_id"])
         self.tree.copy_global_to(guild=guild)
         await self.tree.sync(guild=guild)
+
+    async def reload_modules(self) -> None:
+        importlib.reload(blackjack)
+        importlib.reload(errors)
+        importlib.reload(menus)
+
+        for filename in os.listdir("./cogs"):
+            if filename.endswith(".py"):
+                await self.reload_extension(f"cogs.{filename[:-3]}")
 
 
 if __name__ == "__main__":
