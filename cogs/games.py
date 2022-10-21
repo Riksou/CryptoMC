@@ -79,7 +79,7 @@ class RouletteReplay(ui.View):
     @discord.ui.button(label="Rejouer", emoji="🔁", style=discord.ButtonStyle.blurple)
     async def replay(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
         if interaction.user.id != self.author_id:
-            return await interaction.response.send_message("Ce boutton ne vous cible pas.")
+            return await interaction.response.send_message("Ce boutton ne vous cible pas.", ephemeral=True)
 
         roulette_command = interaction.client.tree.get_command("roulette")
         await roulette_command.callback(self.cog, interaction, self.color, self.amount)
@@ -96,7 +96,7 @@ class SlotsReplay(ui.View):
     @discord.ui.button(label="Rejouer", emoji="🔁", style=discord.ButtonStyle.blurple)
     async def replay(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
         if interaction.user.id != self.author_id:
-            return await interaction.response.send_message("Ce boutton ne vous cible pas.")
+            return await interaction.response.send_message("Ce boutton ne vous cible pas.", ephemeral=True)
 
         slots_command = interaction.client.tree.get_command("slots")
         await slots_command.callback(self.cog, interaction, self.amount)
