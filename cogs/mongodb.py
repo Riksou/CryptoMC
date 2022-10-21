@@ -18,7 +18,9 @@ class MongoDB(commands.Cog):
         "slots_won": 0,
         "slots_lost": 0,
         "coinflip_won": 0,
-        "coinflip_lost": 0
+        "coinflip_lost": 0,
+        "blackjack_won": 0,
+        "blackjack_lost": 0
     }
 
     def __init__(self, client: CryptoMC):

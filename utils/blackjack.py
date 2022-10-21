@@ -183,10 +183,13 @@ class BlackjackGame:
     async def _process_result(self, interaction: discord.Interaction, result: Tuple[str, Result]) -> None:
         if result[1] == Result.WON:
             await self.interaction.client.mongo.update_user_data_document(
-                self.interaction.user.id, {"$inc": {"bank": self.bet_amount * 2}}
+                self.interaction.user.id, {"$inc": {"bank": self.bet_amount * 2, "blackjack_won": 1}}
             )
             desc = f"Vous gagnez **{self.bet_amount * 2}** {self.interaction.client.config['coin']}."
         elif result[1] == Result.LOST:
+            await self.interaction.client.mongo.update_user_data_document(
+                self.interaction.user.id, {"$inc": {"blackjack_lost": 1}}
+            )
             desc = f"Vous perdez **{self.bet_amount}** {self.interaction.client.config['coin']}."
         else:
             await self.interaction.client.mongo.update_user_data_document(
