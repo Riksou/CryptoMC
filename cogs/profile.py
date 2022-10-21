@@ -61,7 +61,7 @@ class Profile(commands.Cog):
             description=f"🏦 **Banque**: {user_data['bank']:,} {self.client.config['coin']}\n"
                         f"💈 **Ratio roulette**: "
                         f"{self._get_game_ratio(user_data['roulette_won'], user_data['roulette_lost']):0.2f}\n"
-                        f"🎰 **Ratio machine à Lulux Coins**: "
+                        f"🎰 **Ratio machine à sous**: "
                         f"{self._get_game_ratio(user_data['slots_won'], user_data['slots_lost']):0.2f}\n"
                         f"🪙 **Ratio coinflip**: "
                         f"{self._get_game_ratio(user_data['coinflip_won'], user_data['coinflip_lost']):0.2f}\n",
