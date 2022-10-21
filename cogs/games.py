@@ -8,6 +8,7 @@ from discord.ext import commands
 
 import utils.errors as errors
 from cryptomc import CryptoMC
+from utils.blackjack import BlackjackGame
 
 
 class CoinFlipConfirmationView(ui.View):
@@ -253,6 +254,15 @@ class Games(commands.Cog):
             f"Vous pouvez accepter la demande en réagissant à ce message avec ✅ et la refuser avec ❌.",
             view=CoinFlipConfirmationView(interaction.user, target, amount)
         )
+
+    @app_commands.command(name="blackjack")
+    @app_commands.rename(amount="montant")
+    @app_commands.describe(amount="Montant que vous misez")
+    async def blackjack(self, interaction: discord.Interaction, amount: int):
+        """Jouer une partie de blackjack."""
+        await self._is_bet_amount_valid(interaction, amount)
+
+        await BlackjackGame(interaction, amount).start()
 
 
 async def setup(client):
