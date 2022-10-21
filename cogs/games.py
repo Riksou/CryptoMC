@@ -88,8 +88,8 @@ class SlotsReplay(ui.View):
 
     @discord.ui.button(label="Rejouer", emoji="🔁", style=discord.ButtonStyle.blurple)
     async def replay(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
-        roulette_command = interaction.client.tree.get_command("slots")
-        await roulette_command.callback(self.cog, interaction, self.amount)
+        slots_command = interaction.client.tree.get_command("slots")
+        await slots_command.callback(self.cog, interaction, self.amount)
 
 
 class Games(commands.Cog):
@@ -210,7 +210,7 @@ class Games(commands.Cog):
             msg = f"Vous venez de gagner votre partie de machine à sous, vous remportez **{amount_won}** " \
                   f"{self.client.config['coin']}."
         else:
-            update_actions = {"$inc": {"bank": -amount, "slots_won": 1}}
+            update_actions = {"$inc": {"bank": -amount, "slots_lost": 1}}
             msg = f"Vous venez de perdre votre partie de machine à sous, vous perdez **{amount}** " \
                   f"{self.client.config['coin']}."
 
