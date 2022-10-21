@@ -114,6 +114,23 @@ class PlayBlackjackView(discord.ui.View):
         await self.game.process_turn(interaction, Action.STAY)
 
 
+class BlackjackReplay(discord.ui.View):
+
+    def __init__(self, author_id: int, amount: int):
+        super().__init__(timeout=60.0)
+        self.author_id = author_id
+        self.amount = amount
+
+    @discord.ui.button(label="Rejouer", emoji="🔁", style=discord.ButtonStyle.blurple)
+    async def replay(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
+        if interaction.user.id != self.author_id:
+            return await interaction.response.send_message("Ce boutton ne vous cible pas.", ephemeral=True)
+
+        slots_command = interaction.client.tree.get_command("blackjack")
+        cog = interaction.client.get_cog("Games")
+        await slots_command.callback(cog, interaction, self.amount)
+
+
 class BlackjackGame:
 
     def __init__(self, interaction: discord.Interaction, bet_amount: int):
@@ -177,7 +194,9 @@ class BlackjackGame:
             )
         else:
             await interaction.response.send_message(
-                embed=blackjack_embed, file=discord.File(fp=output_buffer, filename="blackjack_endmc.png")
+                embed=blackjack_embed,
+                file=discord.File(fp=output_buffer, filename="blackjack_endmc.png"),
+                view=BlackjackReplay(self.interaction.user.id, self.bet_amount)
             )
 
     async def _process_result(self, interaction: discord.Interaction, result: Tuple[str, Result]) -> None:
