@@ -5,6 +5,7 @@ import discord
 from discord import app_commands
 from discord.ext import commands, tasks
 
+import utils.errors as errors
 from cryptomc import CryptoMC
 
 
@@ -52,6 +53,14 @@ class Bot(commands.Cog):
             retry = discord.utils.format_dt(discord.utils.utcnow() + datetime.timedelta(seconds=error.retry_after), "R")
             await interaction.response.send_message(
                 f"Vous êtes encore en cooldown pour cette commande, merci de réessayer {retry}.", ephemeral=True
+            )
+
+        elif isinstance(error, errors.InvalidAmount):
+            await interaction.response.send_message("Votre mise ne peut pas être inférieure à 1.", ephemeral=True)
+
+        elif isinstance(error, errors.NotEnoughFunds):
+            await interaction.response.send_message(
+                "Vous n'avez pas assez d'argent sur votre compte bancaire.", ephemeral=True
             )
 
         elif isinstance(error, app_commands.CheckFailure):

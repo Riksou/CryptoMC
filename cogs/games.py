@@ -6,6 +6,7 @@ from discord import app_commands, ui
 from discord.app_commands import Choice
 from discord.ext import commands
 
+import utils.errors as errors
 from cryptomc import CryptoMC
 
 
@@ -124,19 +125,13 @@ class Games(commands.Cog):
     def __init__(self, client: CryptoMC):
         self.client = client
 
-    async def _is_bet_amount_valid(self, interaction: discord.Interaction, amount: int) -> bool:
+    async def _is_bet_amount_valid(self, interaction: discord.Interaction, amount: int) -> None:
         if amount < 1:
-            await interaction.response.send_message("Votre mise ne peut pas être inférieure à 1.", ephemeral=True)
-            return False
+            raise errors.InvalidAmount
 
         user_data = await self.client.mongo.fetch_user_data(interaction.user.id)
         if user_data["bank"] < amount:
-            await interaction.response.send_message(
-                "Vous n'avez pas assez d'argent sur votre compte bancaire.", ephemeral=True
-            )
-            return False
-
-        return True
+            raise errors.NotEnoughFunds
 
     @app_commands.command(name="mine")
     @app_commands.checks.cooldown(1, 60 * 60 * 2, key=lambda i: i.user.id)
@@ -176,8 +171,7 @@ class Games(commands.Cog):
     @app_commands.checks.cooldown(1, 3, key=lambda i: i.user.id)
     async def roulette(self, interaction: discord.Interaction, color: Choice[str], amount: int):
         """Jouer à la roulette afin de tenter de gagner des Lulux Coins."""
-        if not await self._is_bet_amount_valid(interaction, amount):
-            return
+        await self._is_bet_amount_valid(interaction, amount)
 
         winning_color = random.choices(list(self.ROULETTE_COLORS), self.ROULETTE_WEIGHTS)[0]
         if winning_color == color.value:
@@ -206,8 +200,7 @@ class Games(commands.Cog):
     @app_commands.checks.cooldown(1, 3, key=lambda i: i.user.id)
     async def slots(self, interaction: discord.Interaction, amount: int):
         """Jouer à la machine à sous afin de tenter de gagner des Lulux Coins."""
-        if not await self._is_bet_amount_valid(interaction, amount):
-            return
+        await self._is_bet_amount_valid(interaction, amount)
 
         slots_result = random.choices(list(self.SLOTS_EMOJIS), weights=self.SLOTS_WEIGHTS, k=9)
         slots_rows = np.array_split(slots_result, 3)
@@ -240,8 +233,7 @@ class Games(commands.Cog):
     @app_commands.checks.cooldown(1, 3, key=lambda i: i.user.id)
     async def coinflip(self, interaction: discord.Interaction, target: discord.User, amount: int):
         """Jouer une partie de coinflip contre un utilisateur."""
-        if not await self._is_bet_amount_valid(interaction, amount):
-            return
+        await self._is_bet_amount_valid(interaction, amount)
 
         if target.id == interaction.user.id:
             return await interaction.response.send_message("Vous ne pouvez pas jouer contre vous-même.", ephemeral=True)
