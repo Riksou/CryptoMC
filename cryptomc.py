@@ -3,6 +3,7 @@ from __future__ import annotations
 import importlib
 import json
 import os
+import random as random
 from typing import Optional, TYPE_CHECKING
 
 import discord
@@ -32,6 +33,8 @@ class CryptoMC(commands.Bot):
             case_insensitive=True,
             owner_id=212844004889329664
         )
+
+        random._inst = random.SystemRandom()
 
         self.remove_command("help")
 
