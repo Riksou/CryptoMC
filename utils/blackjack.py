@@ -102,14 +102,14 @@ class PlayBlackjackView(discord.ui.View):
     @discord.ui.button(label="Tirer", emoji="➕", style=discord.ButtonStyle.gray)
     async def hit(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
         if interaction.user.id != self.game.interaction.user.id:
-            return await interaction.response.send_message("Ce boutton ne vous cible pas.")
+            return await interaction.response.send_message("Ce boutton ne vous cible pas.", ephemeral=True)
 
         await self.game.process_turn(interaction, Action.HIT)
 
     @discord.ui.button(label="Rester", emoji="❌", style=discord.ButtonStyle.gray)
     async def stay(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
         if interaction.user.id != self.game.interaction.user.id:
-            return await interaction.response.send_message("Ce boutton ne vous cible pas.")
+            return await interaction.response.send_message("Ce boutton ne vous cible pas.", ephemeral=True)
 
         await self.game.process_turn(interaction, Action.STAY)
 
