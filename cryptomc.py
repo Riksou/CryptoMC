@@ -11,6 +11,7 @@ import discord
 from discord.ext import commands
 
 import utils.blackjack as blackjack
+import utils.checks as checks
 import utils.errors as errors
 import utils.menus as menus
 
@@ -92,6 +93,7 @@ class CryptoMC(commands.Bot):
 
     async def reload_modules(self) -> None:
         importlib.reload(blackjack)
+        importlib.reload(checks)
         importlib.reload(errors)
         importlib.reload(menus)
 
