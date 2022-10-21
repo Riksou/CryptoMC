@@ -1,6 +1,7 @@
 {
   "bot_token": "",
   "mongodb_uri": "mongodb://127.0.0.1/",
+  "redis_con": "redis://127.0.0.1:6379",
   "guild_id": 596978185422372866,
   "coin": "<:LuluxCoin:985232145737994351>"
 }

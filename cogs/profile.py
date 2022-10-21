@@ -6,6 +6,7 @@ from discord import app_commands
 from discord.ext import commands, menus
 
 from cryptomc import CryptoMC
+from utils.checks import CooldownType, cooldown
 from utils.menus import InteractionViewMenu
 
 
@@ -113,7 +114,7 @@ class Profile(commands.Cog):
         )
 
     @app_commands.command(name="hourly")
-    @app_commands.checks.cooldown(1, 60 * 60, key=lambda i: i.user.id)
+    @cooldown(CooldownType.USER, 60 * 60)
     async def hourly(self, interaction: discord.Interaction):
         """Récupérer des Lulux Coins chaque heure."""
         earned = random.randint(100, 300)
@@ -125,7 +126,7 @@ class Profile(commands.Cog):
         )
 
     @app_commands.command(name="daily")
-    @app_commands.checks.cooldown(1, 60 * 60 * 24, key=lambda i: i.user.id)
+    @cooldown(CooldownType.USER, 60 * 60 * 24)
     async def daily(self, interaction: discord.Interaction):
         """Récupérer des Lulux Coins chaque jour."""
         earned = random.randint(2000, 3000)

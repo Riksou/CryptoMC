@@ -6,6 +6,7 @@ import os
 import random as random
 from typing import Optional, TYPE_CHECKING
 
+import aioredis
 import discord
 from discord.ext import commands
 
@@ -39,8 +40,9 @@ class CryptoMC(commands.Bot):
         self.remove_command("help")
 
         self.config = config
-
         self.color = 0xf7ac1c
+
+        self.redis = None
 
     @property
     def mongo(self) -> Optional[MongoDB]:
@@ -70,6 +72,8 @@ class CryptoMC(commands.Bot):
 
     async def setup_hook(self) -> None:
         self.loop.create_task(self.ready_actions())
+
+        self.redis = await aioredis.from_url(self.config["redis_con"], encoding="utf-8", decode_responses=True)
 
         for filename in os.listdir("./cogs"):
             if filename.endswith(".py"):

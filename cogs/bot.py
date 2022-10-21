@@ -49,7 +49,7 @@ class Bot(commands.Cog):
         if isinstance(error, (app_commands.CommandNotFound, discord.HTTPException, discord.NotFound)):
             return
 
-        elif isinstance(error, app_commands.CommandOnCooldown):
+        elif isinstance(error, (errors.CommandOnCooldown, app_commands.CommandOnCooldown)):
             retry = discord.utils.format_dt(discord.utils.utcnow() + datetime.timedelta(seconds=error.retry_after), "R")
             await interaction.response.send_message(
                 f"Vous êtes encore en cooldown pour cette commande, merci de réessayer {retry}.", ephemeral=True

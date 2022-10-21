@@ -9,6 +9,7 @@ from discord.ext import commands
 import utils.errors as errors
 from cryptomc import CryptoMC
 from utils.blackjack import BlackjackGame
+from utils.checks import CooldownType, cooldown
 
 
 class CoinFlipConfirmationView(ui.View):
@@ -135,7 +136,7 @@ class Games(commands.Cog):
             raise errors.NotEnoughFunds
 
     @app_commands.command(name="mine")
-    @app_commands.checks.cooldown(1, 60 * 60 * 2, key=lambda i: i.user.id)
+    @cooldown(CooldownType.USER, 60 * 60 * 2)
     async def mine(self, interaction: discord.Interaction):
         """Miner des Lulux Coins."""
         mined = random.randint(300, 600)
@@ -147,7 +148,7 @@ class Games(commands.Cog):
         )
 
     @app_commands.command(name="work")
-    @app_commands.checks.cooldown(1, 60 * 20, key=lambda i: i.user.id)
+    @cooldown(CooldownType.USER, 60 * 20)
     async def work(self, interaction: discord.Interaction):
         """Travailler pour gagner des Lulux Coins."""
         job = random.choices(list(self.JOBS), self.JOBS_WEIGHTS)[0]
