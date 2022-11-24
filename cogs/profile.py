@@ -118,6 +118,9 @@ class Profile(commands.Cog):
     async def hourly(self, interaction: discord.Interaction):
         """Récupérer des Lulux Coins chaque heure."""
         earned = random.randint(100, 300)
+        if any([d for d in interaction.user.roles if d.is_premium_subscriber() is True]):
+            earned = earned * 1.15
+
         await self.client.mongo.update_user_data_document(interaction.user.id, {"$inc": {"bank": earned}})
 
         await self.client.embed(
@@ -130,6 +133,9 @@ class Profile(commands.Cog):
     async def daily(self, interaction: discord.Interaction):
         """Récupérer des Lulux Coins chaque jour."""
         earned = random.randint(2000, 3000)
+        if any([d for d in interaction.user.roles if d.is_premium_subscriber() is True]):
+            earned = earned * 1.15
+
         await self.client.mongo.update_user_data_document(interaction.user.id, {"$inc": {"bank": earned}})
 
         await self.client.embed(

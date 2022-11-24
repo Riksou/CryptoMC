@@ -141,6 +141,9 @@ class Games(commands.Cog):
         """Miner des Lulux Coins."""
         mined = random.randint(300, 600)
 
+        if any([d for d in interaction.user.roles if d.is_premium_subscriber() is True]):
+            mined = mined * 1.15
+
         await self.client.mongo.update_user_data_document(interaction.user.id, {"$inc": {"bank": mined}})
 
         await self.client.embed(
@@ -153,6 +156,9 @@ class Games(commands.Cog):
         """Travailler pour gagner des Lulux Coins."""
         job = random.choices(list(self.JOBS), self.JOBS_WEIGHTS)[0]
         earned = random.randint(self.JOBS[job][0], self.JOBS[job][1])
+
+        if any([d for d in interaction.user.roles if d.is_premium_subscriber() is True]):
+            earned = earned * 1.15
 
         await self.client.mongo.update_user_data_document(interaction.user.id, {"$inc": {"bank": earned}})
 
