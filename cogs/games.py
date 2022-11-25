@@ -142,7 +142,7 @@ class Games(commands.Cog):
         mined = random.randint(300, 600)
 
         if any([d for d in interaction.user.roles if d.is_premium_subscriber() is True]):
-            mined = mined * 1.15
+            mined = int(mined * 1.15)
 
         await self.client.mongo.update_user_data_document(interaction.user.id, {"$inc": {"bank": mined}})
 
@@ -158,7 +158,7 @@ class Games(commands.Cog):
         earned = random.randint(self.JOBS[job][0], self.JOBS[job][1])
 
         if any([d for d in interaction.user.roles if d.is_premium_subscriber() is True]):
-            earned = earned * 1.15
+            earned = int(earned * 1.15)
 
         await self.client.mongo.update_user_data_document(interaction.user.id, {"$inc": {"bank": earned}})
 
