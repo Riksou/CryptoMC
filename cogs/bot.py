@@ -39,7 +39,7 @@ class Bot(commands.Cog):
 
         await self.client.change_presence(
             activity=discord.Activity(
-                type=discord.ActivityType.watching, name=f"{best_user} avec {best_user_data['bank']:,} $EMC"
+                type=discord.ActivityType.watching, name=f"{best_user} avec {best_user_data['bank']:,} $LLC"
             )
         )
 
