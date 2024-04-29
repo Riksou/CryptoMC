@@ -6,7 +6,7 @@ import os
 import random as random
 from typing import Optional, TYPE_CHECKING
 
-import aioredis
+from redis import asyncio as aioredis
 import discord
 from discord.ext import commands
 

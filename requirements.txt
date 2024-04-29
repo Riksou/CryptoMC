@@ -5,7 +5,7 @@ motor
 ujson
 numpy
 pillow
-aioredis
+redis
 
 # Packages from GitHub.
 jishaku @ git+https://github.com/Gorialis/jishaku@master
